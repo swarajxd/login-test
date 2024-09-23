@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        h2 {
+            text-align: center;
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .toggle {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .message {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="loginContainer">
+    <h2>Login</h2>
+    <form id="loginForm">
+        <input type="text" id="loginUsername" placeholder="Username" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+        <div class="message" id="loginMessage"></div>
+    </form>
+    <div class="toggle">
+        <span>Don't have an account? <a href="#" onclick="toggleForms()">Register</a></span>
+    </div>
+</div>
+
+<div class="container" id="registerContainer" style="display: none;">
+    <h2>Register</h2>
+    <form id="registerForm">
+        <input type="text" id="firstName" placeholder="First Name" required>
+        <input type="text" id="lastName" placeholder="Last Name" required>
+        <input type="text" id="registerUsername" placeholder="Username" required>
+        <input type="email" id="registerEmail" placeholder="Email" required>
+        <input type="password" id="registerPassword" placeholder="Password" required>
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+        <button type="submit">Register</button>
+        <div class="message" id="registerMessage"></div>
+    </form>
+    <div class="toggle">
+        <span>Already have an account? <a href="#" onclick="toggleForms()">Login</a></span>
+    </div>
+</div>
+
+<script>
+    function toggleForms() {
+        const loginContainer = document.getElementById('loginContainer');
+        const registerContainer = document.getElementById('registerContainer');
+
+        if (loginContainer.style.display === "none") {
+            loginContainer.style.display = "block";
+            registerContainer.style.display = "none";
+        } else {
+            loginContainer.style.display = "none";
+            registerContainer.style.display = "block";
+        }
+    }
+
+    // Registration Form Handling
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const username = document.getElementById('registerUsername').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const message = document.getElementById('registerMessage');
+        
+        // Check if passwords match
+        if (password !== confirmPassword) {
+            message.textContent = "Passwords do not match!";
+            return;
+        }
+
+        // Store user data in localStorage
+        const user = {
+            firstName,
+            lastName,
+            email,
+            password // For simplicity, storing password as plain text (not recommended in real-world apps)
+        };
+
+        localStorage.setItem(username, JSON.stringify(user));
+        message.textContent = "Registration successful! You can now log in.";
+    });
+
+    // Login Form Handling
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+        const message = document.getElementById('loginMessage');
+
+        // Retrieve user data from localStorage
+        const user = JSON.parse(localStorage.getItem(username));
+
+        // Check if user exists and password matches
+        if (user && user.password === password) {
+            message.textContent = "Login successful!";
+        } else {
+            message.textContent = "Invalid username or password!";
+        }
+    });
+</script>
+
+</body>
+</html>
